@@ -15,7 +15,7 @@ public:
 	virtual void move(const float& dT);
 	virtual void setMomentVelocity(glm::vec2); //TODO mo¿e coœ mniej brzydkiego
 	glm::vec2* position;
-	float g = 9.98*0;
+	float g = 9.98*50;
 	bool touching_stat = false;
 	};
 

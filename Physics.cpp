@@ -34,6 +34,7 @@ void FullStaticCollision(glm::vec2 dir,StaticObject* s1, StaticObject* s2) {
 
 DynamicObject::DynamicObject(glm::vec2* pos):PhysicsInterface(pos)
 {
+	velocity = glm::vec2(0.f, 0.f);
 }
 
 void DynamicObject::resolveCollision(glm::vec2 dir,PhysicsInterface* p)
@@ -64,7 +65,7 @@ void DynamicObject::changeVelo(const float& dT)
 
 void DynamicObject::move(const float& dT)
 {
-	//printf("Moment velo %f, %f\n", momentVelocity.x, momentVelocity.y);
+//	printf("Moment velo %f, %f\n", velocity.x,velocity.y);
 	*position += velocity * dT + momentVelocity*dT;
 	momentVelocity = glm::vec2(0.0, 0.0);
 }
