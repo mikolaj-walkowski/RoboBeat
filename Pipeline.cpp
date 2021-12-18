@@ -56,9 +56,16 @@ void Pipeline::proccesColisions()
 
 void Pipeline::proccesLogic()
 {
+	for (auto ent = sterable.begin(); ent != sterable.end();) {
+		if (auto ref = ent->lock()) {
+			((Logics*)ref.get())->plan();
+			++ent;
+		}
+		else sterable.erase(ent);
+	}
 }
 
-void Pipeline::processPhysics(const float& dT)
+void Pipeline::processPhysics()
 {
 
 	for (auto dEnt = movableEnts.begin(); dEnt != movableEnts.end();) {
@@ -97,25 +104,34 @@ void Pipeline::worldSize()
 void Pipeline::initalizeEnts()
 {
 	glm::vec2* pos = new glm::vec2(0.0, 0.0);
-	std::shared_ptr<Entity> sEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(100, 100)), new StaticObject(pos), new DrawSimpleSquare(pos, glm::vec2(100, 100), glm::vec4(0, 1, 0, 1))));
+	std::shared_ptr<Entity> sEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(100, 100)), new StaticObject(pos, glm::vec2(100,100)), new DrawSimpleSquare(pos, glm::vec2(100, 100), glm::vec4(0, 1, 0, 1))));
 	world.push_back(sEnt);
 	statEnts.push_back(sEnt);
 	foreground.push_back(sEnt);
 
-	pos = new glm::vec2(-150.0, -20.0);
-	sEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(200, 30)), new StaticObject(pos), new DrawSimpleSquare(pos, glm::vec2(200, 30), glm::vec4(0, 1, 1, 1))));
+	pos = new glm::vec2(-300.0, -20.0);
+	sEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(600, 30)), new StaticObject(pos, glm::vec2(600, 30)), new DrawSimpleSquare(pos, glm::vec2(600, 30), glm::vec4(0, 1, 1, 1))));
 	world.push_back(sEnt);
 	statEnts.push_back(sEnt);
 	foreground.push_back(sEnt);
 
 
-	glm::vec2* pos2 = new glm::vec2(0.0, 200.0);
+	pos = new glm::vec2(0.0, 200.0);
 
-	std::shared_ptr<Entity> dEnt = std::shared_ptr<Entity>(new Entity(pos2, new SquareCollision(pos2, glm::vec2(50.f, 50.f)), new DynamicObject(pos2), new DrawSimpleSquare(pos2, glm::vec2(50, 50), glm::vec4(1,0,0,1))));
+	std::shared_ptr<Entity> dEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(50.f, 50.f)), new DynamicObject(pos, glm::vec2(50, 50)), new DrawTexturedSquare(pos, glm::vec2(50, 50), "MainProt1")));
 	world.push_back(dEnt);
 	movableEnts.push_back(dEnt);
 	foreground.push_back(dEnt);
 	player = dEnt;
+
+
+	pos = new glm::vec2(-175.0, 31.0);
+	
+	dEnt = std::shared_ptr<Entity>(new Logics(new Entity(pos, new SquareCollision(pos, glm::vec2(50.f, 50.f)), new DynamicObject(pos, glm::vec2(50, 50)), new DrawTexturedSquare(pos, glm::vec2(50, 50), "ShrigmaSpook"))));
+	world.push_back(dEnt);
+	movableEnts.push_back(dEnt);
+	foreground.push_back(dEnt);
+	sterable.push_back(dEnt);
 }
 void Pipeline::attachKey(std::map<std::string, bool>* _keys) {
 	keys = _keys;
@@ -123,7 +139,6 @@ void Pipeline::attachKey(std::map<std::string, bool>* _keys) {
 void Pipeline::proccesKeyinput()
 {
 	auto pPI = player->getPhysicsInterface();
-	if(pPI->touching_stat && (*keys)["W"]) printf("Print t_stat %d\n" , player->getPhysicsInterface()->touching_stat);
 	pPI->setMomentVelocity(glm::vec2((*keys)["D"] - (*keys)["A"],0));
 	((DynamicObject*)pPI)->velocity.y += (pPI->touching_stat && (*keys)["W"])* 300;//((DynamicObject*)pPI)->speed; //TODO hate that
 }
@@ -131,7 +146,7 @@ ShaderProgram* Pipeline::getSP(std::string name)
 {
 	return shaderPrograms[name];
 }
-GLuint* Pipeline::getTex(std::string name)
+GLuint Pipeline::getTex(std::string name)
 {
 	return textures[name];
 }
@@ -144,13 +159,14 @@ void Pipeline::initializeSPs()
 }
 void Pipeline::draw()
 {
+	glm::mat4 V = glm::translate(glm::mat4(1.0f), glm::vec3(-*player->getPosition(), 0.f));
 	for (auto itr = foreground.begin(); itr != foreground.end();) {
 		if (auto ref = itr->lock()) {
 			auto sp = shaderPrograms[ref->getDrawingInterface()->spName];
 			sp->use();
 			glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
-
-			ref->getDrawingInterface()->draw();
+			glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
+			ref->draw(dT);
 			++itr;
 		}
 		else

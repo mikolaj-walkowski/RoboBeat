@@ -7,5 +7,5 @@ in vec2 i_texCoord;
 out vec4 pixelColor;
 
 void main(void) {
-	pixelColor = texture(tex,vec2(0.4,1));// texture(tex, i_texCoord);
+	pixelColor = texture(tex, i_texCoord);
 }

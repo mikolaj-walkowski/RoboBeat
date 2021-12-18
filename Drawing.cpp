@@ -11,7 +11,7 @@ DrawSimpleSquare::DrawSimpleSquare(glm::vec2* pos,glm::vec2 _dims, glm::vec4 _co
 	}
 }
 
-void DrawSimpleSquare::draw()
+void DrawSimpleSquare::draw(bool flip)
 {
 	M = glm::translate(glm::mat4(1.0f), glm::vec3(*position, 0));
 	auto sp = Pipeline::getInstance()->getSP(spName);
@@ -36,7 +36,7 @@ DrawTexturedSquare::DrawTexturedSquare(glm::vec2* pos,glm::vec2 _dims, std::stri
 }
 
 
-void DrawTexturedSquare::draw()
+void DrawTexturedSquare::draw(bool flip)
 {
 	M = glm::translate(glm::mat4(1.0f), glm::vec3(*position, 0));
 
@@ -45,7 +45,8 @@ void DrawTexturedSquare::draw()
 
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 
-	glUniform1i(sp->u("tex"), *(Pipeline::getInstance()->getTex(texName)));
+	glUniform1i(sp->u("tex"), Pipeline::getInstance()->getTex(texName)-1);//TODO Why?
+	glUniform1i(sp->u("flip"),flip);
 
 	glEnableVertexAttribArray(sp->a("vertex"));
 	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, verts);

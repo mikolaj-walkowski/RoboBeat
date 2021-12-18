@@ -38,7 +38,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (key == GLFW_KEY_W) inputs["W"] = 1;
 		if (key == GLFW_KEY_A) inputs["A"] = 1;
 		if (key == GLFW_KEY_D) inputs["D"] = 1;
-	//	if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(true);
+		if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window,1);
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_W) inputs["W"] = 0;
@@ -76,7 +76,7 @@ void freeOpenGLProgram(GLFWwindow* window) {
 }
 
 //Drawing procedure
-void drawScene(GLFWwindow* window,float dT) {
+void drawScene(GLFWwindow* window) {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	Pipeline::getInstance()->draw();
 	glfwSwapBuffers(window);
@@ -95,7 +95,7 @@ int main(void)
 		exit(EXIT_FAILURE); 
 	}
 
-	window = glfwCreateWindow(1600, 900, "OpenGL", NULL, NULL);  //Create a window 500pxx500px titled "OpenGL" and an OpenGL context associated with it. 
+	window = glfwCreateWindow(1600, 900, "RoboBeat", NULL, NULL);  //Create a window 500pxx500px titled "OpenGL" and an OpenGL context associated with it. 
 
 	if (!window) //If no window is opened then close the program
 	{
@@ -119,12 +119,13 @@ int main(void)
 	glfwSetTime(0);
 	while (!glfwWindowShouldClose(window)) //As long as the window shouldnt be closed yet...
 	{		
-		float dT = glfwGetTime();
+		Pipeline::getInstance()->dT = glfwGetTime();
 		glfwSetTime(0);
 		Pipeline::getInstance()->proccesColisions();
 		Pipeline::getInstance()->proccesKeyinput();
-		Pipeline::getInstance()->processPhysics(dT);
-		drawScene(window,dT);
+		Pipeline::getInstance()->proccesLogic();
+		Pipeline::getInstance()->processPhysics();
+		drawScene(window);
 		glfwPollEvents(); //Process callback procedures corresponding to the events that took place up to now
 	}
 	freeOpenGLProgram(window);

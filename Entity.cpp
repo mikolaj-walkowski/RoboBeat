@@ -3,6 +3,10 @@
 Entity::Entity(glm::vec2* p, CollisionInterface* cI, PhysicsInterface* pI, DrawingInterface* dI):position(p),collisonInterface(cI),physicsInterface(pI),drawingInterface(dI){
 }
 
+Entity::Entity()
+{
+}
+
 Entity::~Entity()
 {
     delete physicsInterface;
@@ -51,14 +55,35 @@ void Entity::setDrawingInterface(DrawingInterface* drawingInterface)
     this->drawingInterface = drawingInterface;
 }
 
+void Entity::draw(const float& dT)
+{
+    drawingInterface->draw(physicsInterface->facing);
+}
+
 void VisitingVisitor::accept(VisitingVisitor*)
 {
 }
 
-void VisitingVisitor::reactTo(Player*)
-{
-}
+//void VisitingVisitor::reactTo(Player*)
+//{
+//}
 
 void VisitingVisitor::reactTo(Entity*)
 {
 }
+
+//Player::Player(glm::vec2* p, CollisionInterface* cI, PhysicsInterface* pI, DrawingInterface* dI):Entity(p,cI,pI,dI)
+//{
+//}
+//
+//void Player::logics(const float&)
+//{
+//}
+//
+//Object::Object(glm::vec2* p, CollisionInterface* cI, PhysicsInterface* pI, DrawingInterface* dI):Entity(p, cI, pI, dI)
+//{
+//}
+//
+//void Object::logics(const float&)
+//{
+//}

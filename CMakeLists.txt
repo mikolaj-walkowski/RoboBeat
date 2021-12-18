@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project ("RoboBeat")
 
 # Dodaj źródło do pliku wykonywalnego tego projektu.
-add_executable (RoboBeat "main_file.cpp" "Collisions.cpp" "Collisions.h" "constants.h" "Drawing.cpp" "Drawing.h" "Entity.cpp" "Entity.h" "lodepng.cpp" "lodepng.h" "Logic.cpp" "Logic.h" "Physics.cpp" "Physics.h" "Pipeline.cpp" "Pipeline.h" "shaderprogram.cpp" "shaderprogram.h" "TextureLoader.h")
+add_executable (RoboBeat "main_file.cpp" "Collisions.cpp" "Collisions.h" "constants.h" "Drawing.cpp" "Drawing.h" "Entity.cpp" "Entity.h" "lodepng.cpp" "lodepng.h" "Logic.cpp" "Logic.h" "Physics.cpp" "Physics.h" "Pipeline.cpp" "Pipeline.h" "shaderprogram.cpp" "shaderprogram.h" "TextureLoader.h" "LogicDecorators.h" "LogicDecorators.cpp")
 
 add_subdirectory(glfw)
 add_subdirectory(glew)

@@ -11,7 +11,7 @@ class Entity;
 class VisitingVisitor {
 public:
     virtual void accept(VisitingVisitor*);
-    virtual void reactTo(Player*);
+    /*virtual void reactTo(Player*);*/
     virtual void reactTo(Entity*);
 
 };
@@ -26,29 +26,34 @@ private:
 public:
     
     Entity(glm::vec2* p, CollisionInterface* cI, PhysicsInterface* pI, DrawingInterface* dI);
+    Entity();
 	~Entity();
 
-    CollisionInterface* getCollisonInterface() const;
-    void setCollisonInterface(CollisionInterface* collisonInterface);
+    virtual CollisionInterface* getCollisonInterface() const;
+    virtual void setCollisonInterface(CollisionInterface* collisonInterface);
 
-    PhysicsInterface* getPhysicsInterface() const;
-    void setPhysicsInterface(PhysicsInterface* physicsInterface);
+    virtual PhysicsInterface* getPhysicsInterface() const;
+    virtual void setPhysicsInterface(PhysicsInterface* physicsInterface);
 
-    glm::vec2* getPosition() const;
-    void setPosition(glm::vec2* position);
+    virtual glm::vec2* getPosition() const;
+    virtual void setPosition(glm::vec2* position);
 
-public:
-    DrawingInterface* getDrawingInterface() const;
-    void setDrawingInterface(DrawingInterface* drawingInterface);
-
+    virtual DrawingInterface* getDrawingInterface() const;
+    virtual void setDrawingInterface(DrawingInterface* drawingInterface);
+    
+    virtual void draw(const float& dT);
+   // virtual void logics(const  float &dT) = 0;
 };
-
-class Player : public Entity
-{
-public:
-	//Player();
-	//~Player();
-
-private:
-
-};
+//class Object : public Entity {
+//public:
+//    Object(glm::vec2* p, CollisionInterface* cI, PhysicsInterface* pI, DrawingInterface* dI);
+//    void logics(const float&);
+//};
+//
+//class Player : public Entity {
+//public:
+//    Player(glm::vec2* p, CollisionInterface* cI, PhysicsInterface* pI, DrawingInterface* dI);
+//    void logics(const float&);
+//private:
+//
+//};
