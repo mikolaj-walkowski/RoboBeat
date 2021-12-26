@@ -3,6 +3,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 class SquareCollision;
+/// <summary>
+/// Interfejs kolizyjny - zawiera funkcje s³u¿¹ce do wywo³ania odpowiedniej funkcji pomiêdzy dwoma ró¿nymi 
+/// </summary>
 class CollisionInterface
 {
 private:
@@ -14,8 +17,10 @@ public:
 	virtual glm::vec2 collide(CollisionInterface* c)=0;
 	virtual glm::vec2 collideWithSquare(SquareCollision* sq) = 0;
 };
-
-class SquareCollision: public CollisionInterface
+/// <summary>
+/// Odpowiada za kolzije z innymi obiektami typu prostok¹t
+/// </summary>
+class SquareCollision: public CollisionInterface //TODO zmieñ na Rectangle bo square to krind¿ 
 {
 public:
 	SquareCollision(glm::vec2* pos,glm::vec2 dims);

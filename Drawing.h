@@ -3,6 +3,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "shaderprogram.h"
 #include <string>
+/// <summary>
+/// Klasa definiuj¹ca strategiê
+/// </summary>
 class DrawingInterface
 {
 public:

@@ -7,7 +7,9 @@
 #include "Drawing.h"
 class Player;
 class Entity;
-
+/// <summary>
+/// Wizytor obiektu Entity mo¿e siê  przydaæ w przysz³oœci
+/// </summary>
 class VisitingVisitor {
 public:
     virtual void accept(VisitingVisitor*);
@@ -15,6 +17,10 @@ public:
     virtual void reactTo(Entity*);
 
 };
+
+/// <summary>
+/// G³ówna klasa silnika reprezentuje dowolny obiekt w grze i jego podstawowe zachowania w œwiecie gry.
+/// </summary>
 class Entity : public VisitingVisitor
 {
 public:
@@ -24,7 +30,13 @@ private:
     DrawingInterface* drawingInterface;
 	glm::vec2* position;
 public:
-    
+    /// <summary>
+    /// Konstruktor two¿¹cy obiekt z wymienneymi strategiami
+    /// </summary>
+    /// <param name="p">Pozycja obiektu dzielona miêdzy wieloma sk³adowymi Entity</param>
+    /// <param name="cI">Strategia Kolizyjna</param>
+    /// <param name="pI">Strategia Fizyczna</param>
+    /// <param name="dI">Strategia rysowania</param>
     Entity(glm::vec2* p, CollisionInterface* cI, PhysicsInterface* pI, DrawingInterface* dI);
     Entity();
 	~Entity();
@@ -40,7 +52,9 @@ public:
 
     virtual DrawingInterface* getDrawingInterface() const;
     virtual void setDrawingInterface(DrawingInterface* drawingInterface);
-    
+    /// <summary>
+    ///  Funkcja opakowuje funkcje draw() ze sterategi DrawingInterface i jest defacto kontrolerem animacji
+    /// </summary>
     virtual void draw(const float& dT);
    // virtual void logics(const  float &dT) = 0;
 };
