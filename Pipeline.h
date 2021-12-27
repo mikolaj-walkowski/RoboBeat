@@ -39,6 +39,8 @@ public:
 	std::map<std::string, ShaderProgram*> shaderPrograms;
 	glm::mat4 P = glm::ortho(-400.f,400.f,-225.f,225.f);
 
+	Entity* background;
+
 	ShaderProgram* getSP(std::string name);
 	GLuint getTex(std::string name);
 	void initializeSPs();

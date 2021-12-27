@@ -57,7 +57,10 @@ void Entity::setDrawingInterface(DrawingInterface* drawingInterface)
 
 void Entity::draw(const float& dT)
 {
-    drawingInterface->draw(physicsInterface->facing);
+    if(physicsInterface != NULL)//TODO napewno zmieniæ
+        drawingInterface->draw(physicsInterface->facing);
+    else
+        drawingInterface->draw(false);
 }
 
 void VisitingVisitor::accept(VisitingVisitor*)

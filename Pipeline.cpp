@@ -104,6 +104,8 @@ void Pipeline::worldSize()
 void Pipeline::initalizeEnts()
 {
 	glm::vec2* pos = new glm::vec2(0.0, 0.0);
+	background = new Entity(pos,NULL,NULL,new DrawTexturedSquare(pos, glm::vec2(800,500), "background"));
+	pos = new glm::vec2(0.0, 0.0);
 	std::shared_ptr<Entity> sEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(100, 100)), new StaticObject(pos, glm::vec2(100,100)), new DrawSimpleSquare(pos, glm::vec2(100, 100), glm::vec4(0, 1, 0, 1))));
 	world.push_back(sEnt);
 	statEnts.push_back(sEnt);
@@ -127,7 +129,7 @@ void Pipeline::initalizeEnts()
 
 	pos = new glm::vec2(-175.0, 31.0);
 	
-	dEnt = std::shared_ptr<Entity>(new Logics(new Entity(pos, new SquareCollision(pos, glm::vec2(50.f, 50.f)), new DynamicObject(pos, glm::vec2(50, 50)), new DrawTexturedSquare(pos, glm::vec2(50, 50), "ShrigmaSpook"))));
+	dEnt = std::shared_ptr<Entity>(new Logics(new Entity(pos, new SquareCollision(pos, glm::vec2(50.f, 50.f)), new DynamicObject(pos, glm::vec2(50, 50)), new DrawTexturedSquare(pos, glm::vec2(50, 50), "enemy"))));
 	world.push_back(dEnt);
 	movableEnts.push_back(dEnt);
 	foreground.push_back(dEnt);
@@ -159,6 +161,12 @@ void Pipeline::initializeSPs()
 }
 void Pipeline::draw()
 {
+	auto sp = shaderPrograms[background->getDrawingInterface()->spName];
+	sp->use();
+	glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
+	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(glm::mat4(1.f)));
+	background->draw(dT);
+
 	glm::mat4 V = glm::translate(glm::mat4(1.0f), glm::vec3(-*player->getPosition(), 0.f));
 	for (auto itr = foreground.begin(); itr != foreground.end();) {
 		if (auto ref = itr->lock()) {

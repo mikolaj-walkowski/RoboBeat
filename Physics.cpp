@@ -1,32 +1,44 @@
 #include "Physics.h"
 #include "constants.h"
 
-void FullDynamicCollsion(glm::vec2 dir,DynamicObject* d1, DynamicObject* d2) { //TODO prêdkoœci po zde¿eniu s¹ wank, czasem obiekty siê zczepiaj¹ i kolizja od góry jest tak mocno se.
-	auto v1 = dir * glm::dot(d1->velocity, dir);
-	auto v2 = -dir * glm::dot(d2->velocity, -dir);
+void FullDynamicCollsion(glm::vec2 dir,DynamicObject* d1, DynamicObject* d2) { //TODO kolizja od góry jest tak mocno se.
+	auto vd1 = glm::dot(d1->velocity, dir);
+	auto vd2 = glm::dot(d2->velocity, -dir);
 
-	auto vm1 = dir * glm::dot(d1->momentVelocity, dir);
+	auto vmd1 = glm::dot(d1->momentVelocity, dir);
+	auto vmd2 = glm::dot(d2->momentVelocity, -dir);
+
+	if (vmd1 + vd1 >= 0 && vmd2 + vd2 >= 0)
+		return;
+
+	auto v1 = dir * vd1;
+	auto v2 = -dir * vd2;
+
+	auto vm1 = dir * vmd1;
+	auto vm2 = -dir * vmd2;
+
+	printf("Vmp % f, v2 % f\n", vm1.x,vm2.x);
+
+	auto vk = (v1 * d1->mass + v2 * d2->mass) / (d1->mass + d2->mass);
+	auto vmk = (vm1 * d1->mass + vm2 * d2->mass) / (d1->mass + d2->mass);
+
+	d1->velocity += vk - v1;
+	d2->velocity += vk - v2;
 	
-	auto vm2 = -dir * glm::dot(d2->momentVelocity, -dir);
+	d1->momentVelocity += vmk -vm1;
+	d2->momentVelocity += vmk -vm2;
 
-	printf("V1 % f, v2 % f\n", vm1.x,vm2.x);
-
-	d1->velocity += v2*(d2->mass/d1->mass) - v1 + vm2 * (d2->mass / d1->mass);
-	d2->velocity += v1 * (d1->mass / d2->mass) - v2 + vm1 * (d1->mass / d2->mass);
-	
-	d1->momentVelocity -= vm1;
-	d2->momentVelocity -= vm2;
-
+	printf("Vmk % f, v2 % f\n", d1->momentVelocity.x, d2->momentVelocity.x);
 	
 	auto avg_pos = (*(d1->position) + *(d2->position)) / 2.f;
 	if (dir.x != 0) {
-		(d1->position)->x = avg_pos.x + dir.x * (d1->dimentions.x / 2.f + d2->dimentions.x / 2.f)/2.f + safeDist;
-		(d2->position)->x = avg_pos.x - dir.x * (d1->dimentions.x / 2.f + d2->dimentions.x / 2.f)/2.f - safeDist;
+		(d1->position)->x = avg_pos.x + dir.x * ((d1->dimentions.x / 2.f + d2->dimentions.x / 2.f)/2.f);
+		(d2->position)->x = avg_pos.x - dir.x * ((d1->dimentions.x / 2.f + d2->dimentions.x / 2.f)/2.f);
 
 	}
 	if (dir.y != 0) {
-		(d1->position)->y = avg_pos.y + dir.y * (d1->dimentions.y / 2.f + d2->dimentions.y / 2.f)/2.f + safeDist;
-		(d1->position)->y = avg_pos.y - dir.y * (d1->dimentions.y / 2.f + d2->dimentions.y / 2.f)/2.f - safeDist;
+		(d1->position)->y = avg_pos.y + dir.y * ((d1->dimentions.y / 2.f + d2->dimentions.y / 2.f)/2.f + safeDist);
+		(d1->position)->y = avg_pos.y - dir.y * ((d1->dimentions.y / 2.f + d2->dimentions.y / 2.f)/2.f + safeDist);
 	}
 }
 void StaticDynamicCollision(glm::vec2 dir,StaticObject* s,DynamicObject* d) {
