@@ -112,7 +112,7 @@ void Pipeline::initalizeEnts()
 	foreground.push_back(sEnt);
 
 	pos = new glm::vec2(-300.0, -20.0);
-	sEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(600, 30)), new StaticObject(pos, glm::vec2(600, 30)), new DrawSimpleSquare(pos, glm::vec2(600, 30), glm::vec4(0, 1, 1, 1))));
+	sEnt = std::shared_ptr<Entity>(new Entity(pos, new SquareCollision(pos, glm::vec2(600, 30)), new StaticObject(pos, glm::vec2(600, 30)), new DrawTexturedSquare(pos, glm::vec2(600, 30),"ShrigmaSpook")));
 	world.push_back(sEnt);
 	statEnts.push_back(sEnt);
 	foreground.push_back(sEnt);
